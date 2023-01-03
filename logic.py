@@ -26,7 +26,7 @@ class Database:
                     "move6",
                     "move7",
                     "move8",
-                    "move9", #max 9 moves total
+                    "move9", 
                     "game_id",
                     "winner",
                     "winner_char",
@@ -36,7 +36,7 @@ class Database:
                 ]
             )
 
-    #New Game Initialization
+    # initialize
     def insert_game(self, game_id, playerX, playerO):
 
         self.games = self.games.append(
@@ -49,7 +49,7 @@ class Database:
         )
         self.save()
 
-    # Insert a move into a game
+    # put move into csv
     def insert_move(self, game_id, move_number, coordinates):
 
         game = self.games[self.games["game_id"] == game_id]
@@ -62,7 +62,7 @@ class Database:
         self.save()
         return True
 
-    # Update the winner of a game
+    # change winer of game
     def update_winner(self, game_id, winner, win_char):
 
         game = self.games[self.games["game_id"] == game_id]
@@ -75,7 +75,7 @@ class Database:
         self.save()
         return True
 
-    # Get all games in the database
+    # retrieve all games
     def get_all_games(self):
 
         return self.games
@@ -93,10 +93,10 @@ class Database:
                 "win_percentages": {"human": 0, "bot": 0},
                 "combined_matches": 0,
             }
-        # Win record Calibration
+        # win record Calibration
         human_wins = len(games[games["winner"] == "Human"])
         robot_wins = len(games[games["winner"] == "Bot"])
-        # Statistics % Calibration
+        # statistics % Calibration
         robot_win_percentage = robot_wins/combined_matches * 100
         human_win_percentage = human_wins/combined_matches * 100
 
@@ -109,11 +109,9 @@ class Database:
                 "robot": robot_win_percentage,
             },
         }
-    # Save to the CSV file
-    def save(self):
+        def save(self):
 
         self.games.to_csv(self.path)
-
 
 class Board:
 
@@ -148,7 +146,7 @@ class Board:
 
         self._rows[x][y]=value
 
-    #check board for winner
+    #check board for winners
     def _check_winners(self,winning_symbol):
 
         board=self._rows
@@ -236,7 +234,7 @@ class Game:
         self._playerX=playerX
         self._playerO=playerO
         self.current_player=self._playerX
-        self.current_char="X" #switch this to O for consistency testing
+        self.current_char="X" 
         self.db=Database()
         self.game_id=uuid.uuid4().hex
         self.db.insert_game(
@@ -284,7 +282,7 @@ class Game:
         self.db.update_winner(self.game_id, "Draw", "NONE")
         print(self.db.get_stats())#checking if data tracks with input/results
 
-#Human Class
+# human class
 class Human:
     def __init__(self) -> None:
         
@@ -309,7 +307,7 @@ class Human:
         return (row,column)
         
 
-#Simple bot to fill in open spaces
+# simple bot to fill in open spaces
 class Bot:
     def __init__(self) -> None:
 
