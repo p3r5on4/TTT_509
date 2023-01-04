@@ -6,7 +6,7 @@ import uuid
 class Database:
     def __init__(self):
 
-        # CSV integration
+        # csv
         self.path = "game_data.csv"
         try:
             with open("game_data.csv"):
@@ -34,7 +34,7 @@ class Database:
                 ]
             )
 
-    #New Game Initialization
+    # start new game
     def insert_game(self, game_id, playerX, playerO):
 
         self.games = self.games.append(
@@ -45,7 +45,7 @@ class Database:
         )
         self.save()
 
-    # Insert a move into a game
+    # place move in game
     def insert_move(self, game_id, move_number, coordinates):
 
         game = self.games[self.games["game_id"] == game_id]
@@ -58,7 +58,7 @@ class Database:
         self.save()
         return True
 
-    # Update the winner of a game
+    # winner 
     def update_winner(self, game_id, winner, win_char):
 
         game = self.games[self.games["game_id"] == game_id]
@@ -71,13 +71,13 @@ class Database:
         self.save()
         return True
 
-    # Get all games in the database
+    # fetch all games in database
     def get_all_games(self):
 
         return self.games
 
 
-    # Get a specific game by game_id
+    # fetch by game_id
     def get_game_by_id(self, game_id):
 
         return self.games[self.games["game_id"] == game_id]
@@ -90,27 +90,27 @@ class Database:
 
             return {
                 "human_wins": 0,
-                "robot_wins": 0,
+                "computer_wins": 0,
                 "win_percentages": {"human": 0, "bot": 0},
                 "combined_matches": 0,
             }
-        # Win record Calibration
+        # win record
         human_wins = len(games[games["winner"] == "Human"])
-        robot_wins = len(games[games["winner"] == "Bot"])
-        # Statistics % Calibration
-        robot_win_percentage = robot_wins/combined_matches * 100
+        computer_wins = len(games[games["winner"] == "Bot"])
+        # win % calibration
+        computer_win_percentage = computer_wins/combined_matches * 100
         human_win_percentage = human_wins/combined_matches * 100
 
         return {
             "combined_matches": combined_matches,
             "human_wins": human_wins,
-            "robot_wins": robot_wins,
+            "computer_wins": computer_wins,
             "win_percentages":{
                 "human": human_win_percentage,
-                "robot": robot_win_percentage,
+                "computer": computer_win_percentage,
             },
         }
-    # get the most played first choice from statistics - get_most_common_first_move
+    
     def most_frequent_first_choice(self):
 
         games = self.games
@@ -139,7 +139,7 @@ class Database:
         least_frequent_first_pick = first_move_counter.index[len(first_move_counter) - 1]
         return least_frequent_first_pick
 
-    # Save to the CSV file
+    # save to file
     def save(self):
 
         self.games.to_csv(self.path)
