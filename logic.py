@@ -308,7 +308,7 @@ class Human:
         
 
 # simple bot to fill in open spaces
-class Bot:
+class Computer:
     def __init__(self) -> None:
 
         self.type="Bot"
