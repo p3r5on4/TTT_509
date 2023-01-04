@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
         game=Game(Human(), Human())
     else:
-        game=Game(Human(), Bot())
+        game=Game(Human(), Computer())
 
 
 
