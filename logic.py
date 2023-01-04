@@ -3,12 +3,10 @@ import sys
 import pandas as pd
 import uuid
 
-
 class Database:
     def __init__(self):
 
-        # build the CSV
-
+        # CSV integration
         self.path = "game_data.csv"
         try:
             with open("game_data.csv"):
@@ -26,7 +24,7 @@ class Database:
                     "move6",
                     "move7",
                     "move8",
-                    "move9", 
+                    "move9", #max 9 moves total
                     "game_id",
                     "winner",
                     "winner_char",
@@ -36,12 +34,10 @@ class Database:
                 ]
             )
 
-    # initialize
+    #New Game Initialization
     def insert_game(self, game_id, playerX, playerO):
 
         self.games = self.games.append(
-
-
 
             {"game_id": game_id, "playerX": playerX, "playerO": playerO},
             
@@ -49,7 +45,7 @@ class Database:
         )
         self.save()
 
-    # put move into csv
+    # Insert a move into a game
     def insert_move(self, game_id, move_number, coordinates):
 
         game = self.games[self.games["game_id"] == game_id]
@@ -62,7 +58,7 @@ class Database:
         self.save()
         return True
 
-    # change winer of game
+    # Update the winner of a game
     def update_winner(self, game_id, winner, win_char):
 
         game = self.games[self.games["game_id"] == game_id]
@@ -75,11 +71,16 @@ class Database:
         self.save()
         return True
 
-    # retrieve all games
+    # Get all games in the database
     def get_all_games(self):
 
         return self.games
 
+
+    # Get a specific game by game_id
+    def get_game_by_id(self, game_id):
+
+        return self.games[self.games["game_id"] == game_id]
 
     def get_stats(self):
 
@@ -93,10 +94,10 @@ class Database:
                 "win_percentages": {"human": 0, "bot": 0},
                 "combined_matches": 0,
             }
-        # win record Calibration
+        # Win record Calibration
         human_wins = len(games[games["winner"] == "Human"])
         robot_wins = len(games[games["winner"] == "Bot"])
-        # statistics % Calibration
+        # Statistics % Calibration
         robot_win_percentage = robot_wins/combined_matches * 100
         human_win_percentage = human_wins/combined_matches * 100
 
@@ -109,7 +110,37 @@ class Database:
                 "robot": robot_win_percentage,
             },
         }
-        def save(self):
+    # get the most played first choice from statistics - get_most_common_first_move
+    def most_frequent_first_choice(self):
+
+        games = self.games
+        if len(games)==0:
+
+            return None
+        first_moves = games["move1"]
+        first_move_counter = first_moves.value_counter()
+        if len(first_move_counter)==0:
+
+            return None
+        most_frequent_first_pick=first_move_counter.index[0]
+        return most_frequent_first_pick
+
+    def least_frequent_first_choice(self):
+
+        games=self.games
+        if len(games)==0:
+
+            return None
+        first_moves=games["move1"]
+        first_move_counter=first_moves.value_counter()
+        if len(first_move_counter)==0:
+
+            return None
+        least_frequent_first_pick = first_move_counter.index[len(first_move_counter) - 1]
+        return least_frequent_first_pick
+
+    # Save to the CSV file
+    def save(self):
 
         self.games.to_csv(self.path)
 
@@ -306,12 +337,12 @@ class Human:
         print(board) #comment out to not receive board state after submitting a selection
         return (row,column)
         
-
-# simple bot to fill in open spaces
+# simple AI to fill in open spaces
 class Computer:
+    
     def __init__(self) -> None:
 
-        self.type="Bot"
+        self.type="Computer"
 
     def get_move(self,board,char):
 
