@@ -1,4 +1,4 @@
-from logic import Human, Bot, Game
+from logic import Human, Computer, Game
 
 
 if __name__ == "__main__":
